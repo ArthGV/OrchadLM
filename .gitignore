@@ -1,6 +1,6 @@
 data/*.txt
 *.code-workspace
-test2.ipynb
+test.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
