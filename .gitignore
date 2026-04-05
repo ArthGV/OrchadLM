@@ -1,6 +1,6 @@
-data/*.txt
+*.txt
 *.code-workspace
-test.ipynb
+*.ipynb
 dummy.yaml
 
 # Byte-compiled / optimized / DLL files
