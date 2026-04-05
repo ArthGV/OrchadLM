@@ -47,8 +47,5 @@ class Trainer:
             self.save(out_folder_path + self.model.save_path() + f'_{epoch+1}.pth')
 
     def save(self, path: str):
-        torch.save(self.model.state_dict(), path)
+        self.model.save(path)
         print(f'Saved Model at: {path}')
-
-    def load(self, path: str):
-        self.model.load_state_dict(torch.load(path))

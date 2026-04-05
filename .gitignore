@@ -2,7 +2,8 @@
 *.pth
 *.code-workspace
 *.ipynb
-dummy.yaml
+dummy*.yaml
+*.DS_store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

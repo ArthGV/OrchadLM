@@ -35,3 +35,9 @@ class BaseLM(nn.Module, ABC):
         logits = self.forward(x)
         loss = self.compute_training_loss(y, logits)
         return logits, loss
+    
+    def save(self, path: str):
+        torch.save(self.state_dict(), path)
+
+    def load(self, path: str):
+        self.load_state_dict(torch.load(path))
