@@ -1,4 +1,5 @@
 *.txt
+*.pth
 *.code-workspace
 *.ipynb
 dummy.yaml
