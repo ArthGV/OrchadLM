@@ -1,5 +1,6 @@
 from collections import Counter
 from src.tokenizer.base_tokenizer import BaseTokenizer
+import pickle
 
 class BPETokenizer(BaseTokenizer):
 
@@ -55,3 +56,17 @@ class BPETokenizer(BaseTokenizer):
 
     def decode(self, ids: list[int]) -> str:
         return ''.join(self.id_to_token[i] for i in ids)
+
+    def save(self, path: str) -> None:
+        tokenizer_parameters = {'merge_rules': self.merge_rules, 
+                                'token_to_id': self.token_to_id, 
+                                'id_to_token': self.id_to_token}
+        with open(path, "wb") as f:
+            pickle.dump(tokenizer_parameters, f)
+
+    def load(self, path: str) -> None:
+        with open(path, "rb") as f:
+            tokenizer_parameters = pickle.load(f)
+        self.merge_rules = tokenizer_parameters['merge_rules']
+        self.token_to_id = tokenizer_parameters['token_to_id']
+        self.id_to_token = tokenizer_parameters['id_to_token']

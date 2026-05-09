@@ -24,3 +24,13 @@ class BaseTokenizer(ABC):
     def decode(self, ids: list[int]) -> str:
         """Convert a list of token ids back to a string."""
         ...
+
+    @abstractmethod
+    def save(self, path: str) -> None:
+        """Save tokenizer parameters as pickle."""
+        ...
+
+    @abstractmethod
+    def load(self, path: str) -> None:
+        """Load tokenizer parameters."""
+        ...
