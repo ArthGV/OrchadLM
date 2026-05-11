@@ -39,11 +39,9 @@ class Trainer:
                     h, remainder  = divmod(total_seconds, 3600)
                     m, s          = divmod(remainder, 60)
                     print(f"Epoch {epoch+1} - Loss {loss:.4f} - Time {h:02d}h {m:02d}m {s:02d}s")
-            if save and save_gap:
-                pass
+            if save and (epoch % save_gap == 0):
                 self.save(out_folder_path + self.model.save_path() + f'_{epoch+1}.pth')
         if save:
-            pass
             self.save(out_folder_path + self.model.save_path() + f'_{epoch+1}.pth')
 
     def save(self, path: str):
