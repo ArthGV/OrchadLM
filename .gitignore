@@ -3,6 +3,7 @@
 *.code-workspace
 *.ipynb
 *test.py
+*pkl
 dummy*.yaml
 *.DS_store
 
