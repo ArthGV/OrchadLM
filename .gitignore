@@ -2,6 +2,7 @@
 *.pth
 *.code-workspace
 *.ipynb
+*test.py
 dummy*.yaml
 *.DS_store
 

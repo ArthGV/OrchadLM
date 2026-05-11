@@ -15,7 +15,7 @@ class Generator:
         temperature: float = 1.0,
         beam_width: int = 1,
         beam_depth: int = 1,
-    ) -> list[int]:
+    ):
         """
         Generate model answer.
 
@@ -27,21 +27,22 @@ class Generator:
         """
         self.model.eval()
         context = tokenized_prompt[-context_lenght:]
-        out = []
 
         with torch.no_grad():
             for _ in range(max_tokens):
-                if beam_width > 1:
-                    next_token = self.beam_search(context, beam_width, beam_depth, temperature)
-                else:
-                    next_token = self.generate_next_token(context, temperature)
-
-                out.append(next_token)
+                next_token, next_prob = self.generate_next_token(context, beam_width, beam_depth, temperature)
                 context = context[1:] + [next_token]
-
-        return out
+                yield next_token, next_prob
     
-    def generate_next_token(self, context: list[int], temperature: float = 1.0) -> int:
+    def generate_next_token(self, context: list[int], beam_width: int, beam_depth: int, temperature: float = 1.0):
+        if beam_width > 1:
+            next_token, next_prob  = self.beam_search(context, beam_width, beam_depth, temperature)
+        else:
+            next_token, next_prob = self.sample_next_token(context, temperature)
+        return next_token, next_prob
+
+    
+    def sample_next_token(self, context: list[int], temperature: float = 1.0) -> tuple[int, float]:
         """
         Generate next token.
         """
@@ -50,7 +51,8 @@ class Generator:
         logits = logits[0, -1] / (temperature + 1e-6)
         probs  = F.softmax(logits, dim=-1)
         next_token = torch.multinomial(probs, 1).item()
-        return next_token
+        next_prob = probs[next_token].item()
+        return next_token, next_prob
     
     def beam_search(
         self,
@@ -58,7 +60,7 @@ class Generator:
         beam_width: int = 5,
         depth: int = 3,
         temperature: float = 1.0,
-    ) -> int:
+    ) -> tuple[int, float]:
         """
         Pick the next single token using a fixed-depth beam search lookahead.
 
@@ -108,5 +110,5 @@ class Generator:
             beams = sorted(candidates, key=lambda t: t[0], reverse=True)[:beam_width]
 
         best = beams[0]
-        return best[2]  # root_token
+        return best[2], best[0]   # root_token, cum_lp
         
