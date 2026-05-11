@@ -13,6 +13,9 @@ Core components are under active development, and the pipeline is not yet stable
 📌 More documentation, examples, and tutorials will be released progressively.
 
 ---
+## ▶️ Playground demo to be released soon
+
+![Demo](assets/demo.gif)
 
 ## 🎯 Project Overview
 
@@ -60,7 +63,7 @@ Explore novel optimizations across the pipeline under strict computational const
 
 ## ⚙️ Design Principles
 
-- Simplicity first — minimal abstractions, maximum clarity  
+- Simplicity first — minimal abstractions with maximum clarity  
 - From scratch — avoid black-box frameworks when possible  
 - Efficiency-aware — every step considers CPU constraints  
 - Modular — each component can be studied independently  
