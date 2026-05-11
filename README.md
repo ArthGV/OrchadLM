@@ -15,7 +15,7 @@ Core components are under active development, and the pipeline is not yet stable
 ---
 ## ▶️ Playground demo to be released soon
 
-![Demo](assets/demo.gif)
+![Demo](assets/playground_demo.gif)
 
 ## 🎯 Project Overview
 
