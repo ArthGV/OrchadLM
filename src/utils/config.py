@@ -13,6 +13,9 @@ class Config:
     def __repr__(self):
         return str(vars(self))
     
+    def to_dict(self):
+        return self.__dict__
+    
 def scientific_to_float(value):
     try:
         return float(value)
