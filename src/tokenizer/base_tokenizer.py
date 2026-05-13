@@ -5,6 +5,12 @@ class BaseTokenizer(ABC):
     def __init__(self, token_to_id: dict = None, id_to_token: dict = None):
         self.token_to_id = token_to_id or {}
         self.id_to_token = id_to_token or {}
+    
+    def __repr__(self):
+         return f"{self.__class__.__name__}"
+
+    def __len__(self):
+        return len(self.token_to_id.keys())
 
     @property
     @abstractmethod
