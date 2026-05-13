@@ -8,6 +8,10 @@ class BPETokenizer(BaseTokenizer):
         super().__init__(token_to_id, id_to_token)
         self.num_merges = num_merges
         self.merge_rules = merge_rules or []
+
+    @property
+    def name(self) -> str:
+        return "bpe_tokenizer"
         
     def get_pair_freqs(self, ids: list) -> Counter:
         return Counter(zip(ids, ids[1:]))
@@ -56,12 +60,15 @@ class BPETokenizer(BaseTokenizer):
 
     def decode(self, ids: list[int]) -> str:
         return ''.join(self.id_to_token[i] for i in ids)
+    
+    def save_path(self) -> str:
+        return f'{self.name}_{self.num_merges}'
 
-    def save(self, path: str) -> None:
+    def save(self, folder_path: str) -> None:
         tokenizer_parameters = {'merge_rules': self.merge_rules, 
                                 'token_to_id': self.token_to_id, 
                                 'id_to_token': self.id_to_token}
-        with open(path, "wb") as f:
+        with open(folder_path + '/' + self.save_path() + '.pkl', "wb") as f:
             pickle.dump(tokenizer_parameters, f)
 
     def load(self, path: str) -> None:

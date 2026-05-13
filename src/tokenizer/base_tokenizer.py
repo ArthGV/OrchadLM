@@ -7,6 +7,17 @@ class BaseTokenizer(ABC):
         self.id_to_token = id_to_token or {}
 
     @property
+    @abstractmethod
+    def name(self) -> str:
+        """Model name"""
+        ...
+    
+    @abstractmethod
+    def save_path(self) -> str:
+        """Given hyparameters, build the save path."""
+        ...
+
+    @property
     def vocab_size(self) -> int:
         return len(self.token_to_id)
 
