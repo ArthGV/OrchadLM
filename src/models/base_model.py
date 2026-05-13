@@ -10,6 +10,9 @@ class BaseLM(nn.Module, ABC):
         super().__init__()
         self.model_config = model_config
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.name})"
+
     @property
     def meta(self) -> Config:
         return self.model_config.meta
