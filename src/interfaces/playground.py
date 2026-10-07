@@ -127,11 +127,6 @@ def main():
         with Live(Panel(output_text, title="[bold yellow]Model answer[/]",
                         border_style="yellow", padding=(1, 2)),
                 console=console, refresh_per_second=15) as live:
-            i = 0
-            prompt = 'What is a lime?'
-
-
-            answer = ['B', 'as', 'i', 'c', 'a', 'lly', ' a', ' ', 'le', 'mo', 'n', ' ', 'bu', 't', ' ', 'gr', 'ee', 'n', 'e', 'r', ', ', 's', 'm', 'a', 'll', 'er', ' ', 'and', ' ', 'm', 'e', 'a', 'n', 'e', 'r', '.'] #Basically a lemon, but greener, smaller, and meaner.
             for token, prob in generator.generate(CONTEXT_LEN, tokenizer.encode(prompt), 
                                                   CONFIG.generation.max_tokens, 
                                                   CONFIG.generation.temperature, 
@@ -139,15 +134,10 @@ def main():
                                                   CONFIG.generation.beam_depth):
                 prob = np.exp(prob)
                 text = tokenizer.decode([token])
-                text = answer[i]
-                prob = np.random.uniform(0, 0.001)
                 tokens_and_probs.append((text, prob))
                 output_text.append(text, style=_prob_to_style(prob))
                 live.update(Panel(output_text, title="[bold yellow]Model answer[/]",
                                 border_style="yellow", padding=(1, 2)))
-                i += 1
-                if i == len(answer):
-                    break
 
         _render_output(tokens_and_probs)
 

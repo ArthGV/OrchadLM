@@ -1,0 +1,21 @@
+MODEL:
+  META:
+    TYPE: lime
+    SYMBOL: 🍋‍🟩
+    MODEL: zest
+    VERSION: 0.1.0
+  CONTEXT_LEN: 10
+  EMBED_DIM: 16
+  N_HEADS: 1
+  N_LAYERS: 8
+  PATH: models/lime_zest_v0.1.0/lime_zest_v0.1.0_cl15_ed64_nh2_nl2_1.pth
+
+TOKENIZER:
+  PATH: models/tokenizers/bpe_tokenizer.pkl
+  NUM_MERGES: 100
+
+GENERATION:
+  MAX_TOKENS: 200
+  TEMPERATURE: 1
+  BEAM_WIDTH: 10
+  BEAM_DEPTH: 5
