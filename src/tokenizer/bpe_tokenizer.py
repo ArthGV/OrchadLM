@@ -8,6 +8,8 @@ class BPETokenizer(BaseTokenizer):
         super().__init__(token_to_id, id_to_token)
         self.num_merges = num_merges
         self.merge_rules = merge_rules or []
+        self.token_to_id = token_to_id or {}
+        self.id_to_token = id_to_token or {}
 
     @property
     def name(self) -> str:
@@ -16,47 +18,48 @@ class BPETokenizer(BaseTokenizer):
     def get_pair_freqs(self, ids: list) -> Counter:
         return Counter(zip(ids, ids[1:]))
     
-    def merge_pair(self, pair: tuple, ids: list) -> list:
-        new_ids = []
+    def merge_pair(self, pair: tuple, tokens: list) -> list:
+        a, b = pair
+        new_tokens = []
         i = 0
-        while i < len(ids):
-            if i < len(ids) - 1 and (ids[i], ids[i+1]) == pair:
-                new_ids.append(''.join(pair))
+        while i < len(tokens):
+            if i < len(tokens) - 1 and tokens[i] == a and tokens[i+1] == b:
+                new_tokens.append(a + b)
                 i += 2
             else:
-                new_ids.append(ids[i])
+                new_tokens.append(tokens[i])
                 i += 1
-        return new_ids
+        return new_tokens
     
-    def train_bpe(self, data: str, num_merges: int):
-        ids = list(data)
+    def train_bpe(self, data: str):
+        tokens = list(data)
         merge_rules = []
-
-        for _ in range(num_merges):
-            pairs = self.get_pair_freqs(ids)
+        for _ in range(self.num_merges):
+            pairs = self.get_pair_freqs(tokens)
             if not pairs:
                 break
-            best = max(pairs, key=pairs.get)
-            ids = self.merge_pair(best, ids)
-            merge_rules.append(best)
-
-        # Build mappings
-        all_tokens  = sorted(set(ids) | set(data))   # include base chars for encoding unseen text
-        token_to_id = {t: i for i, t in enumerate(all_tokens)}
-        id_to_token = {i: t for t, i in token_to_id.items()}
-
+            best_pair = max(pairs, key=pairs.get)
+            tokens = self.merge_pair(best_pair, tokens)
+            merge_rules.append(best_pair)
         self.merge_rules = merge_rules
-        self.token_to_id = token_to_id
-        self.id_to_token = id_to_token
+        # rebuild vocab deterministically
+        vocab = set(list(data))
+        tokens = list(data)
+        for pair in self.merge_rules:
+            tokens = self.merge_pair(pair, tokens)
+            vocab.update(tokens)
+        vocab = sorted(vocab)
+        self.token_to_id = {t: i for i, t in enumerate(vocab)}
+        self.id_to_token = {i: t for t, i in self.token_to_id.items()}
 
     def train(self, data: str) -> None:
-        self.train_bpe(data, self.num_merges)
+        self.train_bpe(data)
 
     def encode(self, text: str) -> list[int]:
-        ids = list(text)
+        tokens = list(text)
         for pair in self.merge_rules:
-            ids = self.merge_pair(pair, ids)
-        return [self.token_to_id[t] for t in ids]
+            tokens = self.merge_pair(pair, tokens)
+        return [self.token_to_id[t] for t in tokens]
 
     def decode(self, ids: list[int]) -> str:
         return ''.join(self.id_to_token[i] for i in ids)
